@@ -19,12 +19,12 @@ io.on('connection', function (socket) {
       socket.emit("response","Missing Authorization Key");
       return;
     }
-    if(msg.key !== authentication[msg.id]) {
-      socket.emit("response","Invalid Authorization Key");
-      return;
-    }
     if(!msgProps.every(function(x) { return x in msg })) {
       socket.emit("response", "Missing Message Data");
+      return;
+    }
+    if(msg.key !== authentication[msg.id]) {
+      socket.emit("response","Invalid Authorization Key");
       return;
     }
     delete msg.key; //Don't pass along the key - throw it away
