@@ -23,7 +23,7 @@
         }
         socket.emit("update", JSON.parse($("#jsonArea").val()));
       });
-      function rndInt(min, max) { // min and max included 
+      function rndInt(min, max) {
         return (Math.random() * (max - min + 1) + min).toFixed(1);
       }
       var JSON_DATA = { id: 0, lat: 33.0155, lng: -96.684, text: "Autorack #704049", color: "4444FF", carType: "Autorack", speed: "32.6 mph", status: "On Time", statusColor: "#33FF33", origin: "Farmersville, TX", destination: "Dallas, TX", eta: "10/17/2019 3:35 P.M.", img: "./img/autocar.jpg", key: "KHCKV3KJ234KLH435KH24356KH2KHN3H23K54KK" };
