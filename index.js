@@ -1,9 +1,6 @@
 var express = require('express')
 	, http = require('http');
-//var cookieParser = require('cookie-parser');
-//make sure you keep this order
 var app = express();
-//app.use(cookieParser());
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
@@ -36,5 +33,5 @@ io.on('connection', function (socket) {
   });
 });
 server.listen(8080, function () {
-	console.log('listening on *:8080');
+    console.log('listening on *:8080');
 });
