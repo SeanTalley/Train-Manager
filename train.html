@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <script src="/js/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <script src="/js/bootstrap.bundle.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.12.0/build/alertify.min.js"></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.12.0/build/css/alertify.min.css" />
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.12.0/build/css/themes/bootstrap.min.css" />
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var socket = io();
+      $("#SendButton").click(function (e) {
+        var jsonVal;
+        try {
+          jsonVal = JSON.parse($("#jsonArea").val());
+        }
+        catch (e) {
+          alertify.error("Invalid JSON");
+          return;
+        }
+        socket.emit("update", JSON.parse($("#jsonArea").val()));
+      });
+      function rndInt(min, max) { // min and max included 
+        return (Math.random() * (max - min + 1) + min).toFixed(1);
+      }
+      var JSON_DATA = { id: 0, lat: 33.0155, lng: -96.684, text: "Autorack #704049", color: "4444FF", carType: "Autorack", speed: "32.6 mph", status: "On Time", statusColor: "#33FF33", origin: "Farmersville, TX", destination: "Dallas, TX", eta: "10/17/2019 3:35 P.M.", img: "./img/autocar.jpg", key: "KHCKV3KJ234KLH435KH24356KH2KHN3H23K54KK" };
+      $("#MoveButton").click(function (e) {
+        JSON_DATA.lng -= .0005;
+        JSON_DATA.lat += .00005;
+        JSON_DATA.speed = rndInt(30, 60) + " mph";
+        $("#jsonArea").val(JSON.stringify(JSON_DATA));
+        socket.emit("update", JSON_DATA);
+      });
+      $("#DelayButton").click(function (e) {
+        JSON_DATA.status = "Delayed";
+        JSON_DATA.statusColor = "#FFFF11";
+        JSON_DATA.color = "FFFF33";
+        JSON_DATA.speed = "1.1 mph";
+        $("#jsonArea").val(JSON.stringify(JSON_DATA));
+        socket.emit("update", JSON_DATA);
+      });
+      socket.on("response", function (msg) {
+        alertify.dismissAll();
+        if (msg == "Success")
+          alertify.success("Success!");
+        else
+          alertify.error(msg);
+      });
+      $("#jsonArea").val(JSON.stringify(JSON_DATA));
+    });
+  </script>
+  <style>
+    body {
+      background-color: #CFCFCF;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid" style="background-color:white;border:1px solid black;border-radius:5px;padding:10px;">
+    <!--<div class="form-group">
+    <label for="authentication">Authentication</label>
+    <input type="text" class="form-control" id="authentication" aria-describedby="authenticationHelp" placeholder="Enter Authentication Token">
+    <small id="authenticationHelp" class="form-text text-muted">Enter Authorization Key</small>-->
+    <div class="form-group">
+      <label for="jsonArea">
+        <h3>Train JSON Sender</h3>
+      </label>
+      <textarea class="form-control" id="jsonArea" rows="3"></textarea>
+    </div>
+    <button id="SendButton" class="btn btn-primary">Send</button>
+    <button id="MoveButton" class="btn btn-success">Move</button>
+    <button id="DelayButton" class="btn btn-warning">Delay</button>
+  </div>
+</body>
+
+</html>
